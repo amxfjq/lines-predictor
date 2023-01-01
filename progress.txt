@@ -1,0 +1,45 @@
+where to save my progress of the code and what to do next
+next step is to map user requests to the processed stats
+
+            - Win/Loss (1) - w/l
+            - Team Full Time Points (2) - ft
+            - Game Full Time Points (3) - gft
+            - Team 1st Half Win/Loss (4) - 1st ht
+            - Team 1st Half Points (5) - 1ht
+            - Game 1st Half Points (6) g1ht
+            - Team 2nd Half Win/Loss (7) - 2nd ht
+            - Team 2nd Half Points (8) - 2ht
+            - Game 2nd Half Points (9) - g2ht
+            - Game 1st Quarter Points (10) - gq1
+            - Game 2nd Quarter Points (11) - gq2
+            - Game 3rd Quarter Points (12) - gq3
+            - Game 4th Quarter Points (13) - gq4
+
+liaoning flying leopards
+
+if i == 1:
+                stats_input['win/loss'] = 'w/l'
+            elif i == 2:
+                stats_input['team full time points'] = 'ft'
+            elif i == 3:
+                stats_input['game full time points'] = 'gft'
+            elif i == 4:
+                stats_input['1st half win/loss'] = '1st ht'
+            elif i == 5:
+                stats_input['team 1st half points'] = '1ht'
+            elif i == 6:
+                stats_input['game 1st half points'] = 'g1ht'
+            elif i == 7:
+                stats_input['team 2nd half win/loss'] = '2nd ht'
+            elif i == 8:
+                stats_input['team 2nd half points'] = '2ht'
+            elif i == 9:
+                stats_input['game 2nd half points'] = 'g2ht'
+            elif i == 10:
+                stats_input['game 1st quarter points'] = 'gq1'
+            elif i == 11:
+                stats_input['game 2nd quarter points'] = 'gq2'
+            elif i == 12:
+                stats_input['game 3rd quarter points'] = 'gq3'
+            elif i == 10:
+                stats_input['game 4th quarter points'] = 'gq4'

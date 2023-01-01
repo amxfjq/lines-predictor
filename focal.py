@@ -15,7 +15,7 @@ class retrieve:
                 stats_list.append({'w/l': stats['w/l'], 'ft': stats['ft'], 'gft': stats['gft'], 
                 '1ht': stats['1ht'], 'g1ht': stats['g1ht'], '2ht': stats['2ht'], 'g2ht': stats['g2ht'], 
                 'q1': stats['q1'], 'gq1': stats['gq1'], 'q2': stats['q2'], 'gq2': stats['gq2'], 
-                'q3': stats['q3'], 'gq3': stats['gq3'], 'q4': stats['gq4'], 'opp': stats['opp'], 
+                'q3': stats['q3'], 'gq3': stats['gq3'], 'q4': stats['q4'], 'gq4': stats['gq4'], 'opp': stats['opp'], 
                 'ground': stats['ground'], })
 
         return stats_list
@@ -95,59 +95,109 @@ class retrieve:
 
         return request_store, y
 
-    def mapping_stats_input_to_results(x, y):
+    def mapping_user_requests_to_stats_keyword(self, x):
+        
         stats_input = {}
-        for i in x:
+        for i in x[0]:
             if i == 1:
-                stats_input['win/loss'] = y
+                stats_input['win/loss'] = 'w/l'
             elif i == 2:
                 stats_input['team full time points'] = 'ft'
             elif i == 3:
                 stats_input['game full time points'] = 'gft'
             elif i == 4:
-                stats_input['1st half win/loss'] = ''
+                stats_input['1st half win/loss'] = '1st ht'
+            elif i == 5:
+                stats_input['team 1st half points'] = '1ht'
+            elif i == 6:
+                stats_input['game 1st half points'] = 'g1ht'
+            elif i == 7:
+                stats_input['team 2nd half win/loss'] = '2nd ht'
+            elif i == 8:
+                stats_input['team 2nd half points'] = '2ht'
+            elif i == 9:
+                stats_input['game 2nd half points'] = 'g2ht'
+            elif i == 10:
+                stats_input['game 1st quarter points'] = 'gq1'
+            elif i == 11:
+                stats_input['game 2nd quarter points'] = 'gq2'
+            elif i == 12:
+                stats_input['game 3rd quarter points'] = 'gq3'
+            elif i == 13:
+                stats_input['game 4th quarter points'] = 'gq4'
 
-    def full():
-        pass
-    def half():
-        pass
-    def qtr():
-        pass
+
+        return stats_input, x[1]
+    
+    def mapping_user_requests_to_available_data(self, x, y):
+        #x is the user input mapped to the key that holds the teams total data in y i.e y is the teams data
+        
+        output01 =[]
+
+        #this is to arrange the output of the games from the latest/newest game played to the oldest one
+        sorter = []
+        placeholder =[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        for a in placeholder[10 - x[1]:]:
+            sorter.append(a)
+        sorter.sort(reverse=True)
+
+        for j in sorter:
+            output = {}
+            for i in x[0]:
+                output['vs'] = y[j]['opp']
+
+                if i == 'win/loss':
+                    output['win/loss'] = y[j]['w/l']
+
+                elif i == 'team full time points':
+                    output['team full time points'] = y[j]['ft']
+
+                elif i == 'game full time points':
+                    output['game full time points'] = y[j]['gft']
+
+                elif i == '1st half win/loss':
+                    output['1st half win/loss'] = y[j]['1st ht']
+
+                elif i == 'team 1st half points':
+                    output['team 1st half points'] = y[j]['1ht']
+
+                elif i == 'game 1st half points':
+                    output['game 1st half points'] = y[j]['g1ht']
+
+                elif i == 'team 2nd half win/loss':
+                    output['team 2nd half win/loss'] = y[j]['2nd ht']
+
+                elif i == 'team 2nd half points':
+                    output['team 2nd half points'] = y[j]['2ht']
+
+                elif i == 'game 2nd half points':
+                    output['game 2nd half points'] = y[j]['g2ht']
+
+                elif i == 'game 1st quarter points':
+                    output['game 1st quarter points'] = y[j]['gq1']
+
+                elif i == 'game 2nd quarter points':
+                    output['game 2nd quarter points'] = y[j]['gq2']
+
+                elif i == 'game 3rd quarter points':
+                    output['game 3rd quarter points'] = y[j]['gq3']
+
+                elif i == 'game 4th quarter points':
+                    output['game 4th quarter points'] = y[j]['gq4']
+
+            output01.append(output)
+        
+        return output01
+
 
 def main():
     league = input('league: ')
     team = input('team: ')
     rqt = retrieve(league, team)
-    y = rqt.resolving_wins_and_losses(rqt.raw_results())
-    #user_request_return = user_request()
-    #print (user_request_return)
-    #stat_getter_return = stat_getter()
-    #interpreter(stat_getter_return)
-    #print(stat_getter(user_request_return))
-
-def stat_getter(user_request_return):
-    league, team, stats, past_games = user_request_return
-    print(league)
-    print(team)
-    print(stats)
-    print(past_games)
-
-#    stats_list =[]
-#    league = input('league: ')
-#    team = input('team: ')
-#    file_path = Path(f'{league}/{team}.csv')
-
-#    with open(file_path,'r') as team_file:
-#        team_file01 = csv.DictReader(team_file)
-#        for stats in team_file01:
-#            stats_list.append({'w/l': stats['w/l'], 'ft': stats['ft'], 
-#            'gft': stats['gft']})
-#
-#    return stats_list
-    pass
-def interpreter(stat_getter_return):
-    for i in stat_getter_return:
-        print (i)
+    pr_user_request = rqt.mapping_user_requests_to_stats_keyword(rqt.user_request())
+    full_stats = rqt.resolving_wins_and_losses(rqt.raw_results())
+    final_result = rqt.mapping_user_requests_to_available_data(x=pr_user_request, y=full_stats)
+    print(final_result)
 
 
 if __name__ == '__main__':
