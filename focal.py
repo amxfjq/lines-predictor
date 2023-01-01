@@ -21,6 +21,7 @@ class retrieve:
         return stats_list
     
     def resolving_wins_and_losses(self, x):
+        #this checks through the data read directly from the files and compare the half time scores both first and second between both teams to determine the winner of each half
 
         for i in x:
             if (2 * int(i['1ht'])) > int(i['g1ht']):
@@ -65,7 +66,8 @@ class retrieve:
         while True:
             try:
                 x = int(input('- '))
-
+        
+        #the end of file detector that is used to get out of the input infinite open loop
             except EOFError:
                 break
 
@@ -96,7 +98,8 @@ class retrieve:
         return request_store, y
 
     def mapping_user_requests_to_stats_keyword(self, x):
-        
+        #x[0] contains request_store from the user input, x[1] contains the number of past matches the user requested for
+
         stats_input = {}
         for i in x[0]:
             if i == 1:
@@ -191,8 +194,8 @@ class retrieve:
 
 
 def main():
-    league = input('league: ')
-    team = input('team: ')
+    league = input('league: ').lower().strip()
+    team = input('team: ').lower().strip()
     rqt = retrieve(league, team)
     pr_user_request = rqt.mapping_user_requests_to_stats_keyword(rqt.user_request())
     full_stats = rqt.resolving_wins_and_losses(rqt.raw_results())
