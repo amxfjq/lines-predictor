@@ -1,3 +1,5 @@
 - full groundwork done for the retrieval of data
 - next step is to work on data presentation and processing
-- before that, work on easy data input
+- before that, work on easy data input(partly done)
+- next step: check if file has been created, yes? skip writer function. no? process the writer function
+- try to delete the top entries in a csv file once the lines are more than 10

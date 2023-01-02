@@ -1,4 +1,5 @@
 import csv
+import re
 from pathlib import Path
 
 
@@ -156,17 +157,125 @@ class Retrieve:
 
         return output01
 
+class Deposit:
+    def __init__(self, league, team):
+        self.league = league
+        self.team = team
+    
+    @staticmethod
+    def user_input():
+        stats = [
+                    'win/loss',
+                    'team full time points',
+                    'game full time points',
+                    'team 1st half points',
+                    'game 1st half points',
+                    'team 2nd half points',
+                    'game 2nd half points',
+                    'team 1st quarter points', 
+                    'game 1st quarter points',
+                    'team 2nd quarter points', 
+                    'game 2nd quarter points',
+                    'team 3rd quarter points', 
+                    'game 3rd quarter points',
+                    'team 4th quarter points', 
+                    'game 4th quarter points',
+                    'opponent', 
+                    'home/away'
+                ]
+
+        input_store = {}
+
+        for i in stats:
+            if i == 'win/loss':
+                while True:
+                    x = input(f'{i}: ').lower().strip()
+                    if matches := re.search(r'(w)(?:in)?|(?:(l)(?:oss)?)', x):
+                        if matches.group(1):
+                            input_store[i] = matches.group(1)
+                            break
+                        else:
+                            input_store[i] = matches.group(2)
+                            break
+                    else:
+                        print('win/loss takes win, loss, w or l as input')
+
+            elif i == 'home/away':
+                while True:
+                    x = input(f'{i}: ').lower().strip()
+                    if matches := re.search(r'(h)(?:ome)?|(?:(a)(?:way)?)', x):
+                        if matches.group(1):
+                            input_store[i] = matches.group(1)
+                            break
+                        else:
+                            input_store[i] = matches.group(2)
+                            break
+
+            elif i == 'opponent':
+                #if i not in ...:
+                input_store[i] = input(f'{i}: ').lower().strip()
+
+            else:
+                while True:
+                    try:
+                        input_store[i] = int(input(f'{i}: '))
+                    except ValueError:
+                        print('input must be a number')
+                    else:
+                        break
+        return input_store
+
+    def create(self,x):
+        file_path = Path(f'{self.league}/{self.team}.csv')
+        with open(file_path,'w') as teamsheet:
+            y = csv.writer(teamsheet)
+            y.writerow(['w/l','ft','gft','1ht','g1ht','2ht','g2ht','q1','gq1',
+            'q2','gq2','q3','gq3','q4','gq4','opp','ground'])
+        
+        with open(file_path, 'a') as teamsheet:
+            y = csv.DictWriter(teamsheet, fieldnames=['w/l','ft','gft','1ht','g1ht','2ht','g2ht','q1','gq1','q2','gq2','q3','gq3','q4','gq4','opp','ground'])
+            y.writerow(
+                {
+                    'w/l':x['win/loss'], 
+                    'ft':x['team full time points'], 
+                    'gft':x['game full time points'], 
+                    '1ht':x['team 1st half points'], 
+                    'g1ht':x['game 1st half points'], 
+                    '2ht':x['team 2nd half points'], 
+                    'g2ht':x['game 2nd half points'], 
+                    'q1':x['team 1st quarter points'], 
+                    'gq1':x['game 1st quarter points'], 
+                    'q2':x['team 2nd quarter points'], 
+                    'gq2':x['game 2nd quarter points'], 
+                    'q3':x['team 3rd quarter points'], 
+                    'gq3':x['game 3rd quarter points'], 
+                    'q4':x['team 4th quarter points'], 
+                    'gq4':x['game 4th quarter points'], 
+                    'opp':x['opponent'], 
+                    'ground':x['home/away']
+                    }
+                    )
+
+
 
 def main():
+    quest = input('input or retrieve? ').lower().strip()
     league = input('league: ').lower().strip()
     team = input('team: ').lower().strip()
-    rqt = Retrieve(league, team)
-    full_stats = rqt.resolving_wins_and_losses(rqt.raw_results())
-    user_request = rqt.user_request()
-    final_result = rqt.mapping_user_requests_to_available_data(
-        x=user_request, y=full_stats
-    )
-    print(final_result)
+    
+    if quest == 'input':
+        deposit = Deposit(league, team)
+        user_input = deposit.user_input()
+        deposit.create(user_input)
+
+    elif quest == 'retrieve':
+        rqt = Retrieve(league, team)
+        full_stats = rqt.resolving_wins_and_losses(rqt.raw_results())
+        user_request = rqt.user_request()
+        final_result = rqt.mapping_user_requests_to_available_data(
+            x=user_request, y=full_stats
+        )
+        print(final_result)
 
 
 if __name__ == '__main__':
